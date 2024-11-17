@@ -1,7 +1,8 @@
-package org.hinoob.blockinator.gui.types;
+package org.hinoob.blockinator.gui.types.types;
 
-import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.WrappedGraphics;
+import org.hinoob.blockinator.gui.types.Element;
+import org.hinoob.blockinator.gui.types.Focusable;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -28,6 +29,10 @@ public class InputBox extends Element implements Focusable {
 
     public void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

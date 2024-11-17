@@ -75,7 +75,7 @@ public class LoomServer {
 
                 byte[] msg = new byte[bytesRead];
                 System.arraycopy(buffer, 0, msg, 0, bytesRead);
-                listener.clientMessage(msg);
+                listener.clientMessage(clientId, msg);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class LoomServer {
         void clientConnected(int id);
         void clientDisconnected(int id);
 
-        void clientMessage(byte[] bytes);
+        void clientMessage(int id, byte[] bytes);
         void serverClosed();
         void error(String message);
         void serverStarted();

@@ -10,10 +10,12 @@ import java.awt.event.KeyEvent;
 public class Button extends Element implements Focusable {
 
     private ClickListener listener;
+    private String text;
 
-    public Button(int x, int y, int width, int height, ClickListener listener) {
+    public Button(int x, int y, int width, int height, String text, ClickListener listener) {
         super(x, y, width, height);
 
+        this.text = text;
         this.listener = listener;
     }
 
@@ -32,7 +34,7 @@ public class Button extends Element implements Focusable {
     @Override
     public void render(WrappedGraphics graphics) {
         graphics.drawRect(x, y, width, height, focused ? Color.red : Color.white);
-        graphics.drawString("Button", x + 5, y + height / 2, 20, Color.black);
+        graphics.drawString(text, x + 5, y + height / 2, 20, Color.black);
     }
 
     public interface ClickListener {

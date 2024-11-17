@@ -17,6 +17,7 @@ public class WrappedGraphics {
 
     public void drawString(String text, int x, int y, int size, Color color) {
         graphics.setColor(color);
+        if(text == null) return; // no point
         graphics.setFont(new Font("Arial", Font.PLAIN, size));
         graphics.drawString(text, x, y);
     }

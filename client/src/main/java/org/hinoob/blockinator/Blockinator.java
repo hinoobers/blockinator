@@ -1,10 +1,13 @@
 package org.hinoob.blockinator;
 
+import org.hinoob.blockinator.block.BlockManager;
 import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.Screen;
 import org.hinoob.blockinator.gui.ScreenInstance;
 import org.hinoob.blockinator.gui.WrappedGraphics;
 import org.hinoob.blockinator.screens.LoginScreen;
+import org.hinoob.blockinator.world.World;
+import org.hinoob.loom.LoomClient;
 
 import java.awt.*;
 
@@ -23,9 +26,16 @@ public class Blockinator {
     // ============================
 
     private ScreenInstance mainScreen;
+    private BlockinatorNetwork network;
+    private BlockManager blockManager;
+    public World currentWorld;
 
 
     public void start() {
+        this.network = new BlockinatorNetwork();
+        this.blockManager = new BlockManager();
+        blockManager.register();
+
         ScreenInstance screen = mainScreen = new ScreenInstance("Blockinator", 800, 600, false);
         screen.create();
 
@@ -43,5 +53,9 @@ public class Blockinator {
     public void showScreen(Screen screen) {
         screen.init(mainScreen);
         mainScreen.addRenderer(screen);
+    }
+
+    public BlockinatorNetwork getNetwork() {
+        return network;
     }
 }

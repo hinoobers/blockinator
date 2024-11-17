@@ -11,6 +11,8 @@
     <modules>
         <module>loom</module>
         <module>client</module>
+        <module>server</module>
+        <module>common</module>
     </modules>
 
     <properties>

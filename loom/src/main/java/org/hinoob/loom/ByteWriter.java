@@ -37,6 +37,22 @@ public class ByteWriter {
         return this;
     }
 
+    public ByteWriter writeString(String s) {
+        byte[] stringBytes = s.getBytes();
+        writeInt(stringBytes.length);
+        ensureCapacity(index + stringBytes.length);
+        System.arraycopy(stringBytes, 0, bytes, index, stringBytes.length);
+        index += stringBytes.length;
+        return this;
+    }
+
+    public ByteWriter appendBytes(byte[] bytes) {
+        ensureCapacity(index + bytes.length);
+        System.arraycopy(bytes, 0, this.bytes, index, bytes.length);
+        index += bytes.length;
+        return this;
+    }
+
     public byte[] getBytes() {
         return bytes;
     }

@@ -22,7 +22,7 @@ public class LoomClient {
 
     private void listen() {
         try {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096]; // TODO: Might change later for better performance
             int bytesRead;
             boolean gotId = false;
 
