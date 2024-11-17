@@ -1,0 +1,1 @@
+Custom, simple connection protocol made for this.
