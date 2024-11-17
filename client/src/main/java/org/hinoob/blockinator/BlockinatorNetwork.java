@@ -20,7 +20,7 @@ public class BlockinatorNetwork implements LoomClient.ClientListener {
     }
 
     @Override
-    public void onConnect(int id) {
+        public void onConnect(int id) {
 
     }
 
@@ -35,6 +35,7 @@ public class BlockinatorNetwork implements LoomClient.ClientListener {
 
     public void send(byte[] bytes) {
         if(token != null){
+
             ByteWriter writer = new ByteWriter();
             writer.writeString(token);
             writer.appendBytes(bytes);

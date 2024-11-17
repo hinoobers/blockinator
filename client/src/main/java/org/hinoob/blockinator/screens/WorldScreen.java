@@ -3,15 +3,14 @@ package org.hinoob.blockinator.screens;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import org.hinoob.blockinator.Blockinator;
-import org.hinoob.blockinator.NetworkHandler;
 import org.hinoob.blockinator.PacketIds;
+import org.hinoob.blockinator.CompressUtils;
+import org.hinoob.blockinator.Vector;
 import org.hinoob.blockinator.gui.Screen;
 import org.hinoob.blockinator.gui.WrappedGraphics;
 import org.hinoob.blockinator.gui.types.types.Button;
 import org.hinoob.blockinator.gui.types.types.InputBox;
-import org.hinoob.blockinator.gui.types.types.Label;
 import org.hinoob.blockinator.world.World;
-import org.hinoob.loom.ByteReader;
 import org.hinoob.loom.ByteWriter;
 
 import java.awt.*;
@@ -40,11 +39,15 @@ public class WorldScreen extends Screen {
 
         Blockinator.getInstance().getNetwork().addNetworkHandler((reader) -> {
             int id = reader.readInt();
+            System.out.println("Received packet: " + id);
             if(id == PacketIds.SERVER_TO_CLIENT.WORLD_RESPONSE) {
                 String name = reader.readString();
-                String blockData = reader.readString();
+                System.out.println("Received name: " + name);
+                Vector spawn = reader.readVector();
+                byte[] blockData = CompressUtils.decompress(reader.readBytes());
+                System.out.println("Received world: " + name + " with data: " + blockData.length);
 
-                Blockinator.getInstance().currentWorld = new World(name, new Gson().fromJson(blockData, JsonArray.class));
+                Blockinator.getInstance().currentWorld = new World(name, new Gson().fromJson(new String(blockData), JsonArray.class), spawn);
                 Blockinator.getInstance().showScreen(new MainScreen());
             }
         });

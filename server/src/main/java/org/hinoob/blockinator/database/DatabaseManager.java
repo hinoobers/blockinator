@@ -3,6 +3,7 @@ package org.hinoob.blockinator.database;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.hinoob.blockinator.GlobalProperties;
 
 import java.io.File;
 import java.sql.Connection;
@@ -33,16 +34,28 @@ public class DatabaseManager {
             // 100x100 (height)
             // 100x50 dirt
 
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 5; j++) {
-                    JsonObject object = new JsonObject();
-                    object.addProperty("x", i);
-                    object.addProperty("y", j);
-                    object.addProperty("id", "dirt");
-                    array.add(object);
+
+            int airHeight = 5;
+            int grassHeight = GlobalProperties.WORLD_HEIGHT / 2;
+            for(int blocksX = 0; blocksX < GlobalProperties.WORLD_WIDTH; blocksX++) {
+                for (int blocksY = 0; blocksY < GlobalProperties.WORLD_HEIGHT; blocksY++) {
+                    if (GlobalProperties.WORLD_HEIGHT - blocksY < airHeight) {
+                        continue;
+                    }
+
+                    JsonObject block = new JsonObject();
+                    block.addProperty("x", blocksX);
+                    block.addProperty("y", blocksY);
+
+                    if (blocksY >= grassHeight) {
+                        block.addProperty("type", "grass");
+                    } else {
+                        block.addProperty("type", "dirt");
+                    }
+
+                    array.add(block);
                 }
             }
-
             this.connection.createStatement().execute("INSERT INTO worlds (name, blocks) VALUES ('test', '" + array.toString() + "')");
 
 

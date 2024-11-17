@@ -5,11 +5,13 @@ import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.Screen;
 import org.hinoob.blockinator.gui.ScreenInstance;
 import org.hinoob.blockinator.gui.WrappedGraphics;
+import org.hinoob.blockinator.player.Player;
 import org.hinoob.blockinator.screens.LoginScreen;
 import org.hinoob.blockinator.world.World;
 import org.hinoob.loom.LoomClient;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Blockinator {
 
@@ -29,6 +31,7 @@ public class Blockinator {
     private BlockinatorNetwork network;
     private BlockManager blockManager;
     public World currentWorld;
+    public Player player;
 
 
     public void start() {
@@ -50,12 +53,33 @@ public class Blockinator {
         screen.display();
     }
 
+    public void handleKey(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.VK_A) {
+            if(player != null) player.move(-50, 0);
+        } else if(event.getKeyCode() == KeyEvent.VK_D) {
+            if(player != null) player.move(50, 0);
+        } else if(event.getKeyCode() == KeyEvent.VK_W) {
+
+        } else if(event.getKeyCode() == KeyEvent.VK_S) {
+
+        }
+    }
+
+    public void handleMouseClick(int x, int y, int button) {
+
+    }
+
     public void showScreen(Screen screen) {
+        mainScreen.clearRenderers();
         screen.init(mainScreen);
         mainScreen.addRenderer(screen);
     }
 
     public BlockinatorNetwork getNetwork() {
         return network;
+    }
+
+    public BlockManager getBlockManager() {
+        return blockManager;
     }
 }

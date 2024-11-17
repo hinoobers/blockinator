@@ -24,6 +24,11 @@ public class InputBox extends Element implements Focusable {
     public void _handleKeyTyped(KeyEvent event) {
         if(value == null)
             value = "";
+        if(event.getKeyCode() == KeyEvent.VK_DELETE || event.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            if(!value.isEmpty())
+                value = value.substring(0, value.length() - 1);
+            return;
+        }
         value += event.getKeyChar();
     }
 

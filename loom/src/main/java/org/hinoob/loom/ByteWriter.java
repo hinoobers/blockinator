@@ -1,5 +1,7 @@
 package org.hinoob.loom;
 
+import org.hinoob.blockinator.Vector;
+
 public class ByteWriter {
 
     private byte[] bytes;
@@ -46,14 +48,33 @@ public class ByteWriter {
         return this;
     }
 
-    public ByteWriter appendBytes(byte[] bytes) {
-        ensureCapacity(index + bytes.length);
-        System.arraycopy(bytes, 0, this.bytes, index, bytes.length);
-        index += bytes.length;
+    public ByteWriter writeBytes(byte[] b) {
+        writeInt(b.length);
+        ensureCapacity(index + b.length);
+        for(byte Byte : b) {
+            writeByte(Byte);
+        }
         return this;
     }
 
+    public ByteWriter appendBytes(byte[] b) {
+        ensureCapacity(index + b.length);
+        for(byte Byte : b) {
+            writeByte(Byte);
+        }
+        return this;
+    }
+
+    public ByteWriter writeVector(Vector vector) {
+        writeInt(vector.getX());
+        writeInt(vector.getY());
+        return this;
+    }
+
+
     public byte[] getBytes() {
-        return bytes;
+        byte[] result = new byte[index];
+        System.arraycopy(bytes, 0, result, 0, index);
+        return result;
     }
 }

@@ -5,7 +5,6 @@ import org.hinoob.loom.ByteReader;
 import org.hinoob.loom.ByteWriter;
 import org.hinoob.loom.LoomServer;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,15 @@ public class BServer {
     private DatabaseManager databaseManager = new DatabaseManager();
     private SessionServer sessionServer = new SessionServer();
 
+    private WorldManager worldManager = new WorldManager();
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
     public void start() {
         databaseManager.load();
+        worldManager.getByName("test").display();
 
         server = new LoomServer(3636, new LoomServer.ServerListener() {
             @Override
@@ -46,10 +52,22 @@ public class BServer {
             public void clientMessage(int clientId, byte[] bytes) {
                 ByteReader reader = new ByteReader(bytes);
                 BlockinatorUser user = users.stream().filter(u -> u.getLoomId() == clientId).findFirst().orElse(null);
-                if(user.authenticated && sessionServer.getAccountId(reader.readString()) != user.accountId) {
-                    return;
+                if(user.authenticated) {
+                    String t = reader.readString();
+                    System.out.println("User is authenticated, checking token, got=" + t);
+                    if(sessionServer.getAccountId(t) != user.accountId) {
+                        server.sendToClient(clientId, new ByteWriter()
+                                .writeInt(PacketIds.SERVER_TO_CLIENT.AUTH_RESPONSE)
+                                .writeString("Invalid token")
+                                .getBytes());
+                        return;
+                    }
                 }
                 int id = reader.readInt();
+                if(id == 12) {
+                    System.out.println("Received packet: " + reader.readString());
+                    return;
+                }
 
                 if(id == PacketIds.CLIENT_TO_SERVER.AUTH) {
                     String username = reader.readString();
@@ -79,14 +97,19 @@ public class BServer {
                                 .getBytes());
                     }
                 } else if(id == PacketIds.CLIENT_TO_SERVER.FETCH_WORLD) {
+                    System.out.println("Received fetch world packet");
                     String worldName = reader.readString();
                     if(worldName == null || worldName.isEmpty()) return;
                     System.out.println("Fetching world: " + worldName);
 
+                    World w = worldManager.getByName(worldName);
+                    byte[] compressed = w.encode();
+                    System.out.println("Compressed world: " + compressed.length);
                     server.sendToClient(clientId, new ByteWriter()
                             .writeInt(PacketIds.SERVER_TO_CLIENT.WORLD_RESPONSE)
                             .writeString(worldName)
-                            .writeString(WorldUtils.shorten(databaseManager.getWorld(worldName)))
+                            .writeVector(w.getSpawnPoint())
+                            .writeBytes(compressed)
                             .getBytes());
                 }
             }

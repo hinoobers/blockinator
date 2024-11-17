@@ -1,5 +1,6 @@
 package org.hinoob.blockinator.gui;
 
+import org.hinoob.blockinator.Blockinator;
 import org.hinoob.blockinator.gui.types.Element;
 import org.hinoob.blockinator.gui.types.Focusable;
 
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScreenInstance implements ActionListener {
 
@@ -19,7 +21,7 @@ public class ScreenInstance implements ActionListener {
 
     private JFrame frame;
     private JPanel panel;
-    private List<Renderer> renderers = new ArrayList<>();
+    private List<Renderer> renderers = new CopyOnWriteArrayList<>();
 
     public ScreenInstance(String title, int width, int height, boolean resizable) {
         this.title = title;
@@ -48,8 +50,11 @@ public class ScreenInstance implements ActionListener {
                         for(Element element : screen.getElements()) {
                             element.handleClick(e.getX(), e.getY(), e.getButton());
                         }
+
                     }
                 }
+
+                Blockinator.getInstance().handleMouseClick(e.getX(), e.getY(), e.getButton());
             }
         });
         panel.addKeyListener(new KeyListener() {
@@ -69,6 +74,8 @@ public class ScreenInstance implements ActionListener {
                         }
                     }
                 }
+
+                Blockinator.getInstance().handleKey(e);
             }
 
             @Override
@@ -97,6 +104,10 @@ public class ScreenInstance implements ActionListener {
 
     public void addRenderer(Renderer renderer) {
         renderers.add(renderer);
+    }
+
+    public void clearRenderers() {
+        renderers.clear();
     }
 
     public void display() {

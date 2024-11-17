@@ -11,7 +11,7 @@ public abstract class Screen implements Renderer{
 
     protected int width, height;
     private int backgroundColor;
-    private final List<Element> elements = new ArrayList<>();
+    private final List<Renderer> elements = new ArrayList<>();
 
     public Screen(int backgroundColor) {
         this.backgroundColor = backgroundColor;
@@ -29,14 +29,18 @@ public abstract class Screen implements Renderer{
         elements.add(element);
     }
 
-    public Collection<Element> getElements() {
-        return elements;
+    public void add(Renderer renderer) {
+        elements.add(renderer);
+    }
+
+    public List<Element> getElements() {
+        return elements.stream().filter(element -> element instanceof Element).map(d -> (Element)d).toList();
     }
 
     @Override
     public void render(WrappedGraphics graphics) {
         graphics.drawRect(0, 0, 800, 600, new Color(backgroundColor));
-        for(Element element : elements) {
+        for(Renderer element : elements) {
             element.render(graphics);
         }
     }
