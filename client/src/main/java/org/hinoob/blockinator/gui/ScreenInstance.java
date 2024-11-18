@@ -1,6 +1,7 @@
 package org.hinoob.blockinator.gui;
 
 import org.hinoob.blockinator.Blockinator;
+import org.hinoob.blockinator.entity.Entity;
 import org.hinoob.blockinator.gui.types.Element;
 import org.hinoob.blockinator.gui.types.Focusable;
 
@@ -23,6 +24,8 @@ public class ScreenInstance implements ActionListener {
     private JPanel panel;
     private List<Renderer> renderers = new CopyOnWriteArrayList<>();
 
+    private int ticks = 40;
+
     public ScreenInstance(String title, int width, int height, boolean resizable) {
         this.title = title;
         this.width = width;
@@ -37,8 +40,14 @@ public class ScreenInstance implements ActionListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
+                for(int i = 0; i < ticks; i++) {
+
+                }
+
+                WrappedGraphics graphics = new WrappedGraphics(g);
                 for(Renderer renderer : ScreenInstance.this.renderers) {
-                    renderer.render(new WrappedGraphics(g));
+                    renderer.preRender(graphics);
+                    renderer.render(graphics);
                 }
             }
         };
@@ -72,10 +81,11 @@ public class ScreenInstance implements ActionListener {
                                 element.handleKeyTyped(e);
                             }
                         }
+
+                        screen.handleKey(e);
                     }
                 }
 
-                Blockinator.getInstance().handleKey(e);
             }
 
             @Override

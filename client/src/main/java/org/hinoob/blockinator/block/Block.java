@@ -3,6 +3,7 @@ package org.hinoob.blockinator.block;
 import com.google.gson.JsonObject;
 import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.WrappedGraphics;
+import org.hinoob.blockinator.util.TwoBox;
 
 public abstract class Block implements Renderer {
 
@@ -27,6 +28,7 @@ public abstract class Block implements Renderer {
     }
 
     public abstract Block newInstance();
+    public abstract TwoBox getBoundingBox();
 
     public String getId() {
         return id;

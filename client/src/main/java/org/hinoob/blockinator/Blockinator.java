@@ -5,10 +5,10 @@ import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.Screen;
 import org.hinoob.blockinator.gui.ScreenInstance;
 import org.hinoob.blockinator.gui.WrappedGraphics;
-import org.hinoob.blockinator.player.Player;
+import org.hinoob.blockinator.entity.Player;
 import org.hinoob.blockinator.screens.LoginScreen;
 import org.hinoob.blockinator.world.World;
-import org.hinoob.loom.LoomClient;
+import org.hinoob.blockinator.world.WorldManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -30,7 +30,7 @@ public class Blockinator {
     private ScreenInstance mainScreen;
     private BlockinatorNetwork network;
     private BlockManager blockManager;
-    public World currentWorld;
+    public WorldManager worldManager = new WorldManager();
     public Player player;
 
 
@@ -42,28 +42,10 @@ public class Blockinator {
         ScreenInstance screen = mainScreen = new ScreenInstance("Blockinator", 800, 600, false);
         screen.create();
 
-        screen.addRenderer(new Renderer() {
-            @Override
-            public void render(WrappedGraphics graphics) {
-                graphics.drawRect(100, 100, 100, 100, Color.RED);
-            }
-        });
-
         showScreen(new LoginScreen());
         screen.display();
     }
 
-    public void handleKey(KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.VK_A) {
-            if(player != null) player.move(-50, 0);
-        } else if(event.getKeyCode() == KeyEvent.VK_D) {
-            if(player != null) player.move(50, 0);
-        } else if(event.getKeyCode() == KeyEvent.VK_W) {
-
-        } else if(event.getKeyCode() == KeyEvent.VK_S) {
-
-        }
-    }
 
     public void handleMouseClick(int x, int y, int button) {
 
