@@ -60,7 +60,10 @@ public class ScreenInstance implements ActionListener {
                             element.handleClick(e.getX(), e.getY(), e.getButton());
                         }
 
+                        screen.handleMouseClick(e.getX(), e.getY(), e.getButton());
                     }
+
+
                 }
 
                 Blockinator.getInstance().handleMouseClick(e.getX(), e.getY(), e.getButton());

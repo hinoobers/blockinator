@@ -41,6 +41,7 @@ public abstract class Screen implements Renderer{
     }
 
     public abstract void handleKey(KeyEvent event);
+    public abstract void handleMouseClick(int x, int y, int button);
 
     @Override
     public void render(WrappedGraphics graphics) {

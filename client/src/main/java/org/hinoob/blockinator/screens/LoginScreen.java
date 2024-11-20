@@ -65,4 +65,9 @@ public class LoginScreen extends Screen {
     public void handleKey(KeyEvent event) {
 
     }
+
+    @Override
+    public void handleMouseClick(int x, int y, int button) {
+
+    }
 }

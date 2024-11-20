@@ -1,8 +1,6 @@
 package org.hinoob.blockinator.entity;
 
 import org.hinoob.blockinator.block.Block;
-import org.hinoob.blockinator.block.types.GrassBlock;
-import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.WrappedGraphics;
 
 import java.awt.*;
@@ -26,7 +24,7 @@ public class Player extends Entity {
         }
 
         if(!collision) {
-            move(0, 10);
+            moveSafely(0, 10);
         }
     }
 

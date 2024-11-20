@@ -1,8 +1,10 @@
 package org.hinoob.blockinator.screens;
 
+import com.google.gson.JsonObject;
 import org.hinoob.blockinator.Blockinator;
 import org.hinoob.blockinator.GlobalProperties;
 import org.hinoob.blockinator.PacketIds;
+import org.hinoob.blockinator.block.Block;
 import org.hinoob.blockinator.entity.SelfPlayer;
 import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.Screen;
@@ -10,6 +12,7 @@ import org.hinoob.blockinator.gui.WrappedGraphics;
 import org.hinoob.blockinator.entity.Player;
 import org.hinoob.blockinator.world.World;
 import org.hinoob.blockinator.world.WorldManager;
+import org.hinoob.loom.ByteWriter;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -45,6 +48,26 @@ public class MainScreen extends Screen {
                     if(s.getSection() != player.getSection()) continue; // TODO: SHOULD BE REMOVED FROM FUTURE
                     worldManager.currentWorld.getEntities().add(s);
                 }
+            } else if(id == PacketIds.SERVER_TO_CLIENT.UPDATE_BLOCK) {
+                String world = reader.readString();
+                int section = reader.readInt();
+                int x = reader.readInt();
+                int y = reader.readInt();
+                String block = reader.readString();
+
+                World w=  Blockinator.getInstance().worldManager.getWorld(world);
+                if(w == null) return;
+
+                if (block.equals("air")) {
+                    w.removeBlock(section, w.getBlockAt(section, x, y));
+                    return;
+                }
+
+                Block b = Blockinator.getInstance().getBlockManager().getById(block).newInstance();
+                b.setX(x);
+                b.setY(y);
+
+                w.setBlock(section, b);
             }
         });
     }
@@ -52,16 +75,29 @@ public class MainScreen extends Screen {
     @Override
     public void handleKey(KeyEvent event) {
         if(event.getKeyCode() == KeyEvent.VK_A)
-            if(player != null) player.move(-GlobalProperties.BLOCK_SIZE, 0);
+            if(player != null) player.moveSafely(-GlobalProperties.BLOCK_SIZE, 0);
 
         if(event.getKeyCode() == KeyEvent.VK_D)
-            if(player != null) player.move(GlobalProperties.BLOCK_SIZE, 0);
+            if(player != null) player.moveSafely(GlobalProperties.BLOCK_SIZE, 0);
 
         if(event.getKeyCode() == KeyEvent.VK_W)
-            if(player != null) player.move(0, -GlobalProperties.BLOCK_SIZE*3);
+            if(player != null) player.moveSafely(0, -GlobalProperties.BLOCK_SIZE*3);
 
         if(event.getKeyCode() == KeyEvent.VK_S)
-            if(player != null) player.move(0, GlobalProperties.BLOCK_SIZE);
+            if(player != null) player.moveSafely(0, GlobalProperties.BLOCK_SIZE);
+    }
+
+    @Override
+    public void handleMouseClick(int x, int y, int button) {
+        Block block = player.getWorld().getBlockAt(player.getSection(), x / GlobalProperties.BLOCK_SIZE, y / GlobalProperties.BLOCK_SIZE);
+        if(block != null) {
+            player.getWorld().removeBlock(player.getSection(), block);
+            Blockinator.getInstance().getNetwork().send(new ByteWriter()
+                    .writeInt(PacketIds.CLIENT_TO_SERVER.DESTROY_BLOCK)
+                    .writeInt(player.getSection())
+                    .writeInt(block.getX())
+                    .writeInt(block.getY()).getBytes());
+        }
     }
 
     @Override

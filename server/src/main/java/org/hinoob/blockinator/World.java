@@ -38,6 +38,23 @@ public class World {
         this.name = name;
     }
 
+    public void setBlock(int section, Block block) {
+        this.sections.get(section).addBlock(block);
+    }
+
+    public void removeBlock(int section, Block block) {
+        this.sections.get(section).removeBlock(block);
+    }
+
+    public Block getBlockAt(int section, int x, int y) {
+        for(Block block : this.sections.get(section).getBlocks()) {
+            if(block.getX() == x && block.getY() == y) {
+                return block;
+            }
+        }
+        return null;
+    }
+
     public String toJSON() {
         JsonArray sections = new JsonArray();
         for(Map.Entry<Integer, Section> entry : this.sections.entrySet()) {
@@ -108,7 +125,12 @@ public class World {
         private List<Block> blocks = new ArrayList<>();
 
         public void addBlock(Block block) {
+            blocks.removeIf(b -> b.getX() == block.getX() && b.getY() == block.getY());
             blocks.add(block);
+        }
+
+        public void removeBlock(Block block) {
+            blocks.removeIf(b -> b.getX() == block.getX() && b.getY() == block.getY());
         }
 
         public List<Block> getBlocks() {

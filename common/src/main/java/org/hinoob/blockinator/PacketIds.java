@@ -7,6 +7,7 @@ public class PacketIds {
         public static int WORLD_RESPONSE = 1;
         public static int STATUS_RESPONSE = 2;
         public static int PLAYERS = 3;
+        public static int UPDATE_BLOCK = 4;
 
     }
 
@@ -15,5 +16,6 @@ public class PacketIds {
         public static int JOIN_WORLD = 1;
         public static int POSITION = 2;
         public static int STATUS = 3;
+        public static int DESTROY_BLOCK = 4;
     }
 }

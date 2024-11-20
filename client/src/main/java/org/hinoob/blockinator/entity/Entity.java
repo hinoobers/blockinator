@@ -1,5 +1,7 @@
 package org.hinoob.blockinator.entity;
 
+import org.hinoob.blockinator.GlobalProperties;
+import org.hinoob.blockinator.block.Block;
 import org.hinoob.blockinator.gui.Renderer;
 import org.hinoob.blockinator.gui.WrappedGraphics;
 import org.hinoob.blockinator.world.World;
@@ -19,6 +21,10 @@ public abstract class Entity implements Renderer {
         this.height = 50;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
     public void setWorld(World world) {
         this.world = world;
     }
@@ -31,7 +37,9 @@ public abstract class Entity implements Renderer {
         return section;
     }
 
-    public void move(int x, int y) {
+    public void moveSafely(int x, int y) {
+        // Adjust for collisions
+
         this.x += x;
         this.y += y;
 

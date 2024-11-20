@@ -142,6 +142,19 @@ public class BServer {
 
                     server.sendToClient(clientId, writer.getBytes());
                     user.world = w;
+                } else if(id == PacketIds.CLIENT_TO_SERVER.DESTROY_BLOCK) {
+                    int section = reader.readInt();
+                    int x = reader.readInt();
+                    int y = reader.readInt();
+                    user.world.removeBlock(section, user.world.getBlockAt(section, x, y));
+                    server.sendToAll(new ByteWriter()
+                            .writeInt(PacketIds.SERVER_TO_CLIENT.UPDATE_BLOCK)
+                            .writeString(user.world.getName())
+                            .writeInt(section)
+                            .writeInt(x)
+                            .writeInt(y)
+                            .writeString("air")
+                            .getBytes());
                 }
             }
 

@@ -44,6 +44,14 @@ public class World {
         return name;
     }
 
+    public void removeBlock(int section, Block block) {
+        sections.get(section).getBlocks().remove(block);
+    }
+
+    public void setBlock(int section, Block block) {
+        removeBlock(section, getBlockAt(section, block.getX(), block.getY()));
+        sections.get(section).getBlocks().add(block);
+    }
 
 
     public Block getBlockAt(int section, int x, int y) {

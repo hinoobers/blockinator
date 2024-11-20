@@ -42,7 +42,6 @@ public class WorldScreen extends Screen {
 
         Blockinator.getInstance().getNetwork().addNetworkHandler((reader) -> {
             int id = reader.readInt();
-            System.out.println("Received packet: " + id);
             if(id == PacketIds.SERVER_TO_CLIENT.WORLD_RESPONSE) {
                 Blockinator.getInstance().worldManager.addOrUpdate(reader, new WorldManager.Callback() {
                     @Override
@@ -53,6 +52,11 @@ public class WorldScreen extends Screen {
                 });
             }
         });
+    }
+
+    @Override
+    public void handleMouseClick(int x, int y, int button) {
+
     }
 
     @Override
